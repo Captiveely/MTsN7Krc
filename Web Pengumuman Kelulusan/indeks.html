@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Kelulusan MTs Negeri 7 Kerinci</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #166534, #65a30d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            max-width: 120px; /* Adjust logo size as needed */
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #166534;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #65a30d;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"] {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #166534;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0f4f27;
+        }
+
+        .result-card, .not-found-card {
+            background-color: #e6ffe6;
+            border: 1px solid #a3e635;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden; /* For shine effect */
+        }
+
+        .result-card.show, .not-found-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-card .img-container {
+            width: 150px;
+            height: 200px; /* For 3:4 ratio, if width is 150px, height is 150 * (4/3) = 200px */
+            margin: 0 auto 20px auto;
+            border: 4px solid #16a34a;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px; /* Optional: for slightly rounded corners */
+        }
+
+        .result-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+            display: block;
+        }
+
+        .result-card h3 {
+            color: #166534;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            font-size: 1.1em;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .status.lulus {
+            color: #16a34a;
+            font-weight: 700;
+            font-size: 1.3em;
+            margin-top: 15px;
+        }
+
+        .not-found-card {
+            background-color: #ffe6e6;
+            border-color: #ef4444;
+        }
+
+        .not-found-card p {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .logo-container {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00; /* Default, will be overridden by JS */
+            border-radius: 50%;
+            animation: confetti-fall 3s ease-in-out forwards;
+            z-index: 1;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 1; } /* Diubah dari -100px menjadi 0px */
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .shine {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shine::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #eee;
+            font-size: 0.9em;
+        }
+
+        /* Share button and social media icons */
+        .share-buttons {
+            margin-top: 20px;
+        }
+
+        .share-buttons p {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .share-buttons a {
+            display: inline-block;
+            margin: 0 8px;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .share-buttons a.whatsapp { background-color: #25D366; }
+        .share-buttons a.whatsapp:hover { background-color: #1DA851; }
+
+        .share-buttons a.facebook { background-color: #1877F2; }
+        .share-buttons a.facebook:hover { background-color: #145CBF; }
+
+        /* Styles for access restriction message */
+        .access-restricted-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .access-restricted-overlay p {
+            margin: 10px 0;
+            font-size: 1.5em;
+            font-weight: 600;
+            line-height: 1.6; /* Ensure line height for spacing */
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContent" style="display: none;">
+        <div class="container shine">
+            <div class="header">
+                <img src="images/logo.png" alt="Logo MTs Negeri 7 Kerinci" class="logo-container">
+                <h1>Pengumuman Kelulusan</h1>
+                <h2>Peserta Didik Kelas IX<br>MTs Negeri 7 Kerinci<br>Tahun Pelajaran 2024/2025</h2>
+            </div>
+
+            <form id="checkForm">
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="Masukkan Nama Lengkap" required>
+                </div>
+                <div class="form-group">
+                    <label for="tanggalLahir">Tanggal Lahir</label>
+                    <input type="date" id="tanggalLahir" required>
+                </div>
+                <button type="submit" class="pulse">Cek Kelulusan</button>
+            </form>
+        </div>
+
+        <div id="resultCard" class="result-card" style="display: none;">
+            <div class="img-container">
+                <img id="studentPhoto" src="images/siswa" alt="Foto Siswa">
+            </div>
+            <h3 id="studentName"></h3>
+            <p id="studentNISN"></p>
+            <p id="studentBirthDate"></p>
+            <p class="status lulus" id="studentStatus"></p>
+            <div class="share-buttons">
+                <p>Bagikan ke:</p>
+                <a href="#" id="shareWhatsapp" class="whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="#" id="shareFacebook" class="facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+            </div>
+        </div>
+
+        <div id="notFoundCard" class="not-found-card" style="display: none;">
+            <p>Data Tidak Ditemukan</p>
+            <p>Mohon periksa kembali nama dan tanggal lahir yang dimasukkan.</p>
+            <button onclick="window.location.reload()" style="background-color: #6c757d; margin-top: 20px;">Coba Lagi</button>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 MTs Negeri 7 Kerinci. Hak Cipta Dilindungi.</p>
+        </div>
+    </div>
+
+    <div id="accessRestricted" class="access-restricted-overlay" style="display: none;">
+        <p>Mohon maaf,</p>
+        <p>Pengumuman kelulusan</p>
+        <p>baru dapat diakses pada:</p>
+        <p>
+            <strong style="font-size: 1.8em;">02 Juni 2025</strong>
+        </p>
+        <p>
+            <strong style="font-size: 1.8em;">Pukul 00.00 WIB</strong>
+        </p>
+        <p>Terima kasih atas pengertiannya.</p>
+    </div>
+
+    <script>
+        // Set the access date and time (02 Juni 2025, 00:00:00 WIB)
+        const accessDate = new Date('2025-06-02T00:00:00+07:00'); // +07:00 for WIB (Western Indonesia Time)
+
+        const mainContent = document.getElementById('mainContent');
+        const accessRestricted = document.getElementById('accessRestricted');
+
+        function checkAccess() {
+            const now = new Date();
+            if (now >= accessDate) {
+                mainContent.style.display = 'block';
+                accessRestricted.style.display = 'none';
+            } else {
+                mainContent.style.display = 'none';
+                accessRestricted.style.display = 'flex';
+            }
+        }
+
+        // Call checkAccess initially
+        checkAccess();
+
+        // Optionally, re-check access every second if you want it to automatically become available
+        // on exactly 00:00:00 without a page refresh.
+        setInterval(checkAccess, 1000);
+
+
+        // Student data
+        const studentData = [
+            {nisn: "0109658023", nama: "AFSAL BUSERTI SYUHADA", status: "Lulus", tanggalLahir: "2010-10-29", foto: "images/siswa/0109658023.jpg"},
+            {nisn: "0104397888", nama: "AHMAD MUMTAZ ALKALIFI", status: "Lulus", tanggalLahir: "2010-03-23", foto: "images/siswa/0104397888.jpg"},
+            {nisn: "0098068487", nama: "AL AMIN", status: "Lulus", tanggalLahir: "2009-06-10", foto: "images/siswa/0098068487.jpg"},
+            {nisn: "0093153583", nama: "ALAMSYAH PRATAMA", status: "Lulus", tanggalLahir: "2009-09-28", foto: "images/siswa/0093153583.jpg"},
+            {nisn: "0105946969", nama: "ANISA KHADIJAH", status: "Lulus", tanggalLahir: "2010-10-08", foto: "images/siswa/0105946969.jpg"},
+            {nisn: "0104597970", nama: "EZA SAFITRI", status: "Lulus", tanggalLahir: "2010-09-26", foto: "images/siswa/0104597970.jpg"},
+            {nisn: "0112339224", nama: "FAZAN ANTARAH SAMUDRA", status: "Lulus", tanggalLahir: "2011-03-04", foto: "images/siswa/0112339224.jpg"},
+            {nisn: "0101155367", nama: "HABIB FAHRIZA AHMAD", status: "Lulus", tanggalLahir: "2010-04-03", foto: "images/siswa/0101155367.jpg"},
+            {nisn: "0108125869", nama: "ICHA MARSELIA HASRI", status: "Lulus", tanggalLahir: "2010-03-14", foto: "images/siswa/0108125869.jpg"},
+            {nisn: "0101297191", nama: "JAISSA AFRILIA", status: "Lulus", tanggalLahir: "2010-04-02", foto: "images/siswa/0101297191.jpg"},
+            {nisn: "0097463626", nama: "KEZIA ANINDYA EDITRI", status: "Lulus", tanggalLahir: "2009-10-07", foto: "images/siswa/0097463626.jpg"},
+            {nisn: "0101137249", nama: "LAURENT FEBRISKON", status: "Lulus", tanggalLahir: "2010-02-11", foto: "images/siswa/0101137249.jpg"},
+            {nisn: "0103862789", nama: "LIYANA KHAIRUNNISA", status: "Lulus", tanggalLahir: "2010-05-05", foto: "images/siswa/0103862789.jpg"},
+            {nisn: "0106159592", nama: "MUHAMMAD EBIL MINDA", status: "Lulus", tanggalLahir: "2010-09-07", foto: "images/siswa/0106159592.jpg"},
+            {nisn: "0102963592", nama: "NUR ZAHIRA", status: "Lulus", tanggalLahir: "2010-10-19", foto: "images/siswa/0102963592.jpg"},
+            {nisn: "0102140427", nama: "RAISHA NIENDA", status: "Lulus", tanggalLahir: "2010-08-24", foto: "images/siswa/0102140427.jpg"},
+            {nisn: "0106906721", nama: "ZAHRAN NADHIR PRATAMA", status: "Lulus", tanggalLahir: "2010-04-21", foto: "images/siswa/0106906721.jpg"},
+            {nisn: "0109507860", nama: "AHZA GILANG PUTRA", status: "Lulus", tanggalLahir: "2010-01-01", foto: "images/siswa/0109507860.jpg"},
+            {nisn: "3102840387", nama: "ALIFATIN NUR ANNISA", status: "Lulus", tanggalLahir: "2010-07-24", foto: "images/siswa/3102840387.jpg"},
+            {nisn: "0109579362", nama: "AMANDA FEBIONA", status: "Lulus", tanggalLahir: "2010-02-27", foto: "images/siswa/0109579362.jpg"},
+            {nisn: "3091024865", nama: "FUTRI RARA", status: "Lulus", tanggalLahir: "2009-01-22", foto: "images/siswa/3091024865.jpg"},
+            {nisn: "0104785944", nama: "M. BILADIN RAHIM", status: "Lulus", tanggalLahir: "2010-11-26", foto: "images/siswa/0104785944.jpg"},
+            {nisn: "0097033039", nama: "M. IQBAL", status: "Lulus", tanggalLahir: "2009-12-23", foto: "images/siswa/0097033039.jpg"},
+            {nisn: "0107343923", nama: "M.SAPAR", status: "Lulus", tanggalLahir: "2010-02-12", foto: "images/siswa/0107343923.jpg"},
+            {nisn: "0104294649", nama: "NADILA", status: "Lulus", tanggalLahir: "2010-12-19", foto: "images/siswa/0104294649.jpg"},
+            {nisn: "0116450636", nama: "NAYFA SATIRA", status: "Lulus", tanggalLahir: "2011-01-31", foto: "images/siswa/0116450636.jpg"},
+            {nisn: "0106565568", nama: "NAYLA AURA FEBRIANA", status: "Lulus", tanggalLahir: "2010-02-25", foto: "images/siswa/0106565568.jpg"},
+            {nisn: "0093873316", nama: "NELFA", status: "Lulus", tanggalLahir: "2009-04-17", foto: "images/siswa/0093873316.jpg"},
+            {nisn: "0101690082", nama: "NURI PUTRI KIRANA", status: "Lulus", tanggalLahir: "2010-05-16", foto: "images/siswa/0101690082.jpg"},
+            {nisn: "0108039890", nama: "OZIEL ANDORI", status: "Lulus", tanggalLahir: "2010-08-05", foto: "images/siswa/0108039890.jpg"},
+            {nisn: "0108683110", nama: "PUTRI NADIA", status: "Lulus", tanggalLahir: "2010-04-16", foto: "images/siswa/0108683110.jpg"},
+            {nisn: "0097775465", nama: "PUTRI YUSPA", status: "Lulus", tanggalLahir: "2009-12-04", foto: "images/siswa/0097775465.jpg"},
+            {nisn: "0109454344", nama: "QAISYA QASEH HERINI", status: "Lulus", tanggalLahir: "2010-09-12", foto: "images/siswa/0109454344.jpg"},
+            {nisn: "0102873452", nama: "SYIFA AULIA RAHAYU", status: "Lulus", tanggalLahir: "2010-01-19", foto: "images/siswa/0102873452.jpg"},
+            {nisn: "0103549681", nama: "ZAFA ALFAREZI", status: "Lulus", tanggalLahir: "2010-10-07", foto: "images/siswa/0103549681.jpg"},
+            {nisn: "0109884134", nama: "ACHA NAYPIA", status: "Lulus", tanggalLahir: "2010-05-16", foto: "images/siswa/0109884134.jpg"},
+            {nisn: "0115560554", nama: "AWRENIA DEWINDI", status: "Lulus", tanggalLahir: "2011-01-12", foto: "images/siswa/0115560554.jpg"},
+            {nisn: "3102519061", nama: "CANTIKA PARAMIDA", status: "Lulus", tanggalLahir: "2010-10-11", foto: "images/siswa/3102519061.jpg"},
+            {nisn: "0101542153", nama: "DARA DWI JUNIARTI", status: "Lulus", tanggalLahir: "2010-06-24", foto: "images/siswa/0101542153.jpg"},
+            {nisn: "0102037235", nama: "DIZA AMENDA ALIV PUTRA", status: "Lulus", tanggalLahir: "2010-07-26", foto: "images/siswa/0102037235.jpg"},
+            {nisn: "0101954895", nama: "ELNI PRATISA", status: "Lulus", tanggalLahir: "2010-08-09", foto: "images/siswa/0101954895.jpg"},
+            {nisn: "0108613553", nama: "FAREL APRADIKA", status: "Lulus", tanggalLahir: "2010-03-30", foto: "images/siswa/0108613553.jpg"},
+            {nisn: "0105640324", nama: "HAFIZA ANGELIKA", status: "Lulus", tanggalLahir: "2010-05-21", foto: "images/siswa/0105640324.jpg"},
+            {nisn: "0104156714", nama: "LUISA HAFIRA", status: "Lulus", tanggalLahir: "2010-07-17", foto: "images/siswa/0104156714.jpg"},
+            {nisn: "0105453938", nama: "LUTFIYYA ZULFITRY", status: "Lulus", tanggalLahir: "2010-09-11", foto: "images/siswa/0105453938.jpg"},
+            {nisn: "0101924194", nama: "M. ALDO ALFATHIA", status: "Lulus", tanggalLahir: "2010-03-16", foto: "images/siswa/0101924194.jpg"},
+            {nisn: "0103849327", nama: "M. AZZAN ALKINDI", status: "Lulus", tanggalLahir: "2010-12-09", foto: "images/siswa/0103849327.jpg"},
+            {nisn: "0103674866", nama: "MARSELO ABINATA", status: "Lulus", tanggalLahir: "2010-04-18", foto: "images/siswa/0103674866.jpg"},
+            {nisn: "0105280810", nama: "MUHAMMAD ANDREAN", status: "Lulus", tanggalLahir: "2010-08-30", foto: "images/siswa/0105280810.jpg"},
+            {nisn: "0105364474", nama: "NABIL EMNUR HIDAYAT", status: "Lulus", tanggalLahir: "2010-11-03", foto: "images/siswa/0105364474.jpg"},
+            {nisn: "0101096307", nama: "NAKA ALANSKY", status: "Lulus", tanggalLahir: "2010-07-13", foto: "images/siswa/0101096307.jpg"},
+            {nisn: "3085152979", nama: "QANAYA EVELINDA GEMI", status: "Lulus", tanggalLahir: "2009-09-30", foto: "images/siswa/3085152979.jpg"},
+            {nisn: "0097318971", nama: "RIO HIDAYAT", status: "Lulus", tanggalLahir: "2009-07-26", foto: "images/siswa/0097318971.jpg"},
+            {nisn: "0097267598", nama: "UMAIRA SYAFIRA", status: "Lulus", tanggalLahir: "2009-12-19", foto: "images/siswa/0097267598.jpg"},
+            {nisn: "3097493229", nama: "YOSITA YULIANTI", status: "Lulus", tanggalLahir: "2009-07-14", foto: "images/siswa/3097493229.jpg"},
+            {nisn: "0109154802", nama: "AHMAD IQBAL KURNIAWAN", status: "Lulus", tanggalLahir: "2010-05-19", foto: "images/siswa/0109154802.jpg"},
+            {nisn: "0114650561", nama: "ARIFFA", status: "Lulus", tanggalLahir: "2010-11-03", foto: "images/siswa/0114650561.jpg"},
+            {nisn: "0101052200", nama: "ARSYI NATASYA", status: "Lulus", tanggalLahir: "2010-04-14", foto: "images/siswa/0101052200.jpg"},
+            {nisn: "0108736283", nama: "AZIRA HAURA PUTRI", status: "Lulus", tanggalLahir: "2010-11-30", foto: "images/siswa/0108736283.jpg"},
+            {nisn: "0109415345", nama: "DANIL AZRI", status: "Lulus", tanggalLahir: "2010-03-05", foto: "images/siswa/0109415345.jpg"},
+            {nisn: "3119083822", nama: "ELFA LAURA", status: "Lulus", tanggalLahir: "2011-03-21", foto: "images/siswa/3119083822.jpg"},
+            {nisn: "0109121263", nama: "FARHANA NUR AMIRA", status: "Lulus", tanggalLahir: "2010-10-23", foto: "images/siswa/0109121263.jpg"},
+            {nisn: "0094703426", nama: "KEVIN JAYA PUTRA", status: "Lulus", tanggalLahir: "2009-06-11", foto: "images/siswa/0094703426.jpg"},
+            {nisn: "0103450416", nama: "KIRANA APRILYA", status: "Lulus", tanggalLahir: "2010-04-03", foto: "images/siswa/0103450416.jpg"},
+            {nisn: "0107909718", nama: "M. HAFIZ", status: "Lulus", tanggalLahir: "2010-07-22", foto: "images/siswa/0107909718.jpg"},
+            {nisn: "0101512107", nama: "M. RIZWAN", status: "Lulus", tanggalLahir: "2010-04-21", foto: "images/siswa/0101512107.jpg"},
+            {nisn: "3115752252", nama: "NAURA ADIRA PRATAMI", status: "Lulus", tanggalLahir: "2011-07-05", foto: "images/siswa/3115752252.jpg"},
+            {nisn: "3108669495", nama: "QURRATU'AINA", status: "Lulus", tanggalLahir: "2010-02-22", foto: "images/siswa/3108669495.jpg"},
+            {nisn: "0101368343", nama: "QURRATU'AINI", status: "Lulus", tanggalLahir: "2010-02-22", foto: "images/siswa/0101368343.jpg"},
+            {nisn: "0103861240", nama: "REVAN HADI PUTRA", status: "Lulus", tanggalLahir: "2010-01-01", foto: "images/siswa/0103861240.jpg"},
+            {nisn: "0101145381", nama: "REZKYE TRUELOVIANOFF. C", status: "Lulus", tanggalLahir: "2010-01-17", foto: "images/siswa/0101145381.jpg"},
+            {nisn: "0102143080", nama: "RIFQI DELVIANSYAH", status: "Lulus", tanggalLahir: "2010-09-10", foto: "images/siswa/0102143080.jpg"},
+            {nisn: "0109479362", nama: "RIVANDI JULIAN", status: "Lulus", tanggalLahir: "2010-07-25", foto: "images/siswa/0109479362.jpg"}
+        ];
+
+        // Format date from YYYY-MM-DD to DD-MM-YYYY
+        function formatDate(dateString) {
+            const [year, month, day] = dateString.split('-');
+            return `${day}-${month}-${year}`;
+        }
+
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#16a34a', '#eab308', '#22c55e', '#facc15', '#4ade80', '#fde047'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(confetti);
+
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('checkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('nama').value.trim().toUpperCase();
+            const tanggalLahir = document.getElementById('tanggalLahir').value; // YYYY-MM-DD from input type="date"
+
+            const student = studentData.find(s =>
+                s.nama.toUpperCase() === nama &&
+                s.tanggalLahir === tanggalLahir
+            );
+
+            const resultCard = document.getElementById('resultCard');
+            const notFoundCard = document.getElementById('notFoundCard');
+            const mainContainer = document.querySelector('.container');
+
+            if (student) {
+                document.getElementById('studentName').textContent = student.nama;
+                document.getElementById('studentNISN').textContent = `NISN: ${student.nisn}`;
+                document.getElementById('studentBirthDate').textContent = `Tanggal Lahir: ${formatDate(student.tanggalLahir)}`;
+                document.getElementById('studentStatus').textContent = `Status: ${student.status}`;
+                document.getElementById('studentPhoto').src = student.foto || 'path/to/default/photo.jpg'; // Default photo if not specified
+
+                mainContainer.style.display = 'none'; // Hide the form
+                notFoundCard.style.display = 'none';
+                resultCard.style.display = 'block';
+                setTimeout(() => {
+                    resultCard.classList.add('show');
+                }, 50); // Small delay for animation
+                createConfetti(); // Trigger confetti for lulus
+
+                // Update share buttons with student data
+                const shareText = encodeURIComponent(`Selamat! Saya ${student.nama} dengan NISN ${student.nisn} dinyatakan Lulus dari MTs Negeri 7 Kerinci. #KelulusanMTsN7Kerinci`);
+                const pageUrl = encodeURIComponent(window.location.href);
+
+                document.getElementById('shareWhatsapp').href = `https://wa.me/?text=${shareText} ${pageUrl}`;
+                document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${shareText}`;
+            } else {
+                mainContainer.style.display = 'none'; // Hide the form
+                resultCard.style.display = 'none';
+                notFoundCard.style.display = 'block';
+                setTimeout(() => {
+                    notFoundCard.classList.add('show');
+                }, 50); // Small delay for animation
+            }
+        });
+    </script>
+</body>
+</html>
